@@ -1,0 +1,135 @@
+{% extends 'main.html'%}
+
+{% block bodymainPage %}
+
+<section class="text-center">
+    </br>
+    </br>
+    </br>
+    </br>
+</section>
+<form method="post" action=".">
+                          {% csrf_token %}
+            <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <h5 class="card-header h5 text-center">
+                                    Prendre votre facture / ticket de caisse en photo
+                                </h5>
+                                <div class="card-body text-center">
+                                    <div class="booth">
+                                        <video id="video" width="100%"
+                                            height="100%" autoplay>
+                                        </video>
+                                        <canvas id="canvas" onClick="download()"></canvas>
+                                    </div>
+                                    <input class="form-control" id="photo" name="canvas" type="hidden">
+
+                                    <div class="text-right">
+                                        <a href="#!" class="btn btn-outline-warning"
+                                            onClick="takepicture()" id="startbutton">
+                                            Prendre en photo
+                                        </a>
+                                        <button class="btn btn-outline-info" type="submit">Valider la photo</button>
+                                        <a href="#!" class="btn btn-outline-success"
+                                            onClick="start()">
+                                            Start Cam
+                                        </a>
+                                        <a href="#!" class="btn btn-outline-danger"
+                                            onClick="stop()">
+                                            Stop Cam
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </form>
+</div>
+
+</br>
+        <script>
+
+            <!-- partie 1 test avec possibilite demarrer camera -->
+
+            var stop = function () {
+                var stream = video.srcObject;
+                var tracks = stream.getTracks();
+                for (var i = 0; i < tracks.length; i++) {
+                    var track = tracks[i];
+                    track.stop();
+                }
+                video.srcObject = null;
+            }
+            var start = function () {
+                var video = document.getElementById('video'),
+                    vendorUrl = window.URL || window.webkitURL;
+                if (navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(function (stream) {
+                            video.srcObject = stream;
+                        }).catch(function (error) {
+                            console.log("Something went wrong!");
+                        });
+                }
+            }
+            $(function () {
+                start();
+            });
+
+            <!-- prise photo via la webcam -->
+
+            (function() {
+
+                  var streaming = false,
+                      video        = document.querySelector('#video'),
+                      cover        = document.querySelector('#cover'),
+                      canvas       = document.querySelector('#canvas'),
+                      photo        = document.querySelector('#photo'),
+                      startbutton  = document.querySelector('#startbutton'),
+                      width = 320,
+                      height = 0;
+
+                  navigator.getMedia = ( navigator.getUserMedia ||
+                                         navigator.webkitGetUserMedia ||
+                                         navigator.mozGetUserMedia ||
+                                         navigator.msGetUserMedia);
+
+                  video.addEventListener('canplay', function(ev){
+                    if (!streaming) {
+                      height = video.videoHeight / (video.videoWidth/width);
+                      video.setAttribute('width', width);
+                      video.setAttribute('height', height);
+                      canvas.setAttribute('width', width);
+                      canvas.setAttribute('height', height);
+                      streaming = true;
+                    }
+                  }, false);
+
+                  function takepicture() {
+                    canvas.width = width;
+                    canvas.height = height;
+                    canvas.getContext('2d').drawImage(video, 0, 0, width, height);
+                    var data = canvas.toDataURL('image/png');
+                    photo.setAttribute('value', data);
+                  }
+
+                  startbutton.addEventListener('click', function(ev){
+                      takepicture();
+                    ev.preventDefault();
+                  }, false);
+
+                })();
+
+            function download() {
+                var download = document.getElementById("download");
+                var image = document.getElementById("canvas").toDataURL("image/png")
+                    .replace("image/png", "image/octet-stream");
+                download.setAttribute("href", image);
+                //download.setAttribute("download","archive.png");
+            }
+        </script>
+
+{% endblock %}
