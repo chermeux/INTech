@@ -15,20 +15,21 @@ def base64_file(data, name=None):
     return ContentFile(base64.b64decode(_img_str), name='{}.{}'.format(name, ext))
 
 # Create your views here.
-def EmpruntMateriel(request):
+def EmpruntRecensementMateriel(request):
     photoTake = 0
-    img = Image.open('./import/IMG_4459.jpg')
-    imgGray = img.convert('L')
-    imgGray.save('./import/test_gray.jpg')
+    CodeBarre =12345
+    #img = Image.open('./import/IMG_4459.jpg')
+    #imgGray = img.convert('L')
+    #imgGray.save('./import/test_gray.jpg')
 
     # read the image
-    im = Image.open("./import/test_gray.jpg")
+    #im = Image.open("./import/test_gray.jpg")
 
     # image brightness enhancer
-    enhancer = ImageEnhance.Contrast(im)
-    factor = 5.5  # increase contrast
-    im_output = enhancer.enhance(factor)
-    im_output.save('./import/test.png')
+    #enhancer = ImageEnhance.Contrast(im)
+    #factor = 5.5  # increase contrast
+    #im_output = enhancer.enhance(factor)
+    #im_output.save('./import/test.png')
 
     message = "Message par défaut"
     ####### sous-partie 1 - enregistrer photo et éléments factures #######
@@ -37,22 +38,38 @@ def EmpruntMateriel(request):
         image = request.POST.get('canvas')
         PhotoCodeBarreTraitement = CodeTraitement.objects.create(image=base64_file(image))
         PhotoCodeBarreTraitement.save()
-
-        img = Image.open('./import/image.png')
+        ####### sous-partie 2 - enregistrer et renommer la facture au bon endroit #######
+        path = os.path.dirname(os.path.dirname(__file__)) + "\import"
+        path1 = os.path.join(path, str(PhotoCodeBarreTraitement.image))
+        oldName, ext = os.path.splitext(str(PhotoCodeBarreTraitement.image))
+        valid_extensions = ['.jpg', '.jpeg', '.png']
+        if not ext in valid_extensions:
+            os.remove(path1)
+        else:
+            newName = str(PhotoCodeBarreTraitement.id) + ext
+            newPath = os.path.join(path, newName)
+            os.rename(path1, newPath)
+            PhotoCodeBarreTraitement.image.name = newName
+            PhotoCodeBarreTraitement.save()
+            PhotoCodeBarreTraitement.image.name = newName
+            PhotoCodeBarreTraitement.save()
+        NameImage = PhotoCodeBarreTraitement.image
+        NameImageId = PhotoCodeBarreTraitement.id
+        img = Image.open('./import/%s' % NameImage)
         imgGray = img.convert('L')
-        imgGray.save('./import/test_gray.jpg')
+        imgGray.save('./import/Convert_gray_%s.jpg' % NameImageId)
 
         # read the image
-        im = Image.open("./import/test_gray.jpg")
+        im = Image.open("./import/Convert_gray_%s.jpg" % NameImageId)
 
         # image brightness enhancer
         enhancer = ImageEnhance.Contrast(im)
         factor = 5.5  # increase contrast
         im_output = enhancer.enhance(factor)
-        im_output.save('./import/more-contrast-image.png')
+        im_output.save('./import/more-contrast-image_%s.png' % NameImageId)
 
         # read the image in numpy array using cv2
-        img = cv2.imread('./import/more-contrast-image.png')
+        img = cv2.imread('./import/more-contrast-image_%s.png' % NameImageId)
 
         # Decode the barcode image
         detectedBarcodes = decode(img)
@@ -71,17 +88,50 @@ def EmpruntMateriel(request):
                 cv2.rectangle(img, (x - 10, y - 10),
                               (x + w + 10, y + h + 10),
                               (255, 0, 0), 2)
-
                 if barcode.data != "":
                     # Print the barcode data
                     print(barcode.data)
                     CodeBarre = barcode.data
+                    CodeBarre = str(CodeBarre)
+                    CodeBarre = CodeBarre[1:-1]
+                    CodeBarre = CodeBarre[1::]
                     print(barcode.type)
             message = "Code Barre correctement traité"
 
-        return redirect('/Materiel/Emprunt/')
+        return redirect('/Materiel/InfoEmpruntRecensement/%s' % CodeBarre)
     context = {'photoTake': photoTake, 'message': message}
-    return render(request, "Materiel/EmpruntMateriel.html", context)
+    return render(request, "Materiel/CodeBarreMateriel.html", context)
 
-def RecensementMateriel(request):
-    return render(request, "Materiel/RecensementMateriel.html")
+def InfoEmpruntRecensement(request, pk):
+    AfficherInputRorE = 2
+    ObjetsBase = Objet.objects.all()
+    ValeurCodeBarre = pk
+    ListeClubs = ['INTech','BricolINT']
+    for ObjetBase in ObjetsBase:
+        print(AfficherInputRorE)
+        print(ObjetBase.CodeBarre)
+        print(pk)
+        if str(pk) == str(ObjetBase.CodeBarre):
+            #Alors on veut emprunter l'objet
+            AfficherInputRorE = 0 #cette variable prend la valeur 0 ou 1 en fonction de savoir si on emprunte ou on recencence un objet et donc l'affichage html est adapté
+        else:
+            AfficherInputRorE = 1
+        print(AfficherInputRorE)
+    if request.method == "POST":
+        if AfficherInputRorE == 0:
+            NomEmprunteur = request.POST.get('NomEmprunteur')
+            DateDebutEmprunt = request.POST.get('DateDebutEmprunt')
+            DateFinEmprunt = request.POST.get('DateFinEmprunt')
+            Caution = request.POST.get('DateFinEmprunt')
+            EmpruntSave = Emprunt.objects.create(idObjetEmprunt=ValeurCodeBarre, NomEmprunteur=NomEmprunteur, DateDebutEmprunt=DateDebutEmprunt, DateFinEmprunt=DateFinEmprunt, Caution=Caution)
+            EmpruntSave.save()
+        else:
+            description = request.POST.get('description')
+            appartenance = request.POST.get('appartenance')
+            #photoObjet = request.POST.get('photoObjet')
+            Rencensement = Objet.objects.create(CodeBarre=ValeurCodeBarre, description=description, appartenance=appartenance) #photoObjet=base64_file(photoObjet)
+            Rencensement.save()
+        return redirect('/Materiel/EmpruntorRecensement/')
+    context = {'AfficherInputRorE': AfficherInputRorE, 'ValeurCodeBarre':ValeurCodeBarre, 'ListeClubs':ListeClubs}
+    return render(request, "Materiel/inforEmpruntOrRencensement.html", context)
+

@@ -1,0 +1,99 @@
+{% extends 'main.html'%}
+
+{% block bodymainPage %}
+<section class="text-center">
+    </br>
+    </br>
+    </br>
+    </br>
+</section>
+{% if AfficherInputRorE == "2" %}
+    <p>Erreur affichage</p>
+{% else %}
+<form method="post" action="{% url 'InfoEmpruntRecensement_urlpattern_name' ValeurCodeBarre %}" enctype="multipart/form-data">
+                  {% csrf_token %}
+    <div class="form-floating mb-3">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                   {% if AfficherInputRorE == 0 %}Emprunt{% else %}Rencenser le Matériel{% endif %}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{% if AfficherInputRorE == 0 %}Emprunt{% else %}Rencenser le Matériel{% endif %}</h5>
+                    <p class="card-text">{% if AfficherInputRorE == 0 %}Indiquez tous les éléments pour emprunter un objet{% else %}Faisons l'inventaire du matériel INTech{% endif %}</p>
+                    {% if AfficherInputRorE == 0 %}
+                        <div class="form-floating mb-3">
+                          <div class="row g-2">
+                             <div class="col-md">
+                               <div class="form-floating">
+                                 <input disabled type="text" class="form-control" value="{{ValeurCodeBarre}}" required>
+                                 <label>Code Barre Objet Emprunté</label>
+                               </div>
+                            </div>
+                            <div class="col-md">
+                               <div class="form-floating">
+                                 <input type="text" class="form-control" value="" name="NomEmprunteur" required>
+                                 <label>Nom Emprunteur</label>
+                               </div>
+                            </div>
+                            <div class="col-md">
+                               <div class="form-floating">
+                                 <input type="text" class="form-control" value="Carte Etudiante" name="Caution" required>
+                                 <label>Caution</label>
+                               </div>
+                            </div>
+                           </div>
+                          </div>
+                          <div class="form-floating mb-3">
+                            <div class="row g-2">
+                            <div class="col-md">
+                              <div class="form-floating">
+                                <input type="date" class="form-control" value="" name="DateDebutEmprunt" required>
+                                <label>Date Debut Emprunt</label>
+                              </div>
+                            </div>
+                          <div class="col-md">
+                            <div class="form-floating">
+                              <input type="date" class="form-control" value="" name="DateFinEmprunt" required>
+                              <label>Date Fin Emprunt</label>
+                            </div>
+                           </div>
+                        </div>
+                    {% else %}
+                         <div class="form-floating mb-3">
+                          <div class="row g-2">
+                             <div class="col-md">
+                               <div class="form-floating">
+                                 <input disabled type="text" class="form-control" value="{{ValeurCodeBarre}}" name="CodeBarre">
+                                 <label>Code Barre Objet à recenser</label>
+                               </div>
+                            </div>
+                            <div class="col-md">
+                               <div class="form-floating">
+                                 <input type="text" class="form-control" value="" name="description" required>
+                                 <label>description</label>
+                               </div>
+                            </div>
+                            <div class="col-md">
+                               <div class="form-floating">
+                                 <select type="text" class="form-control" name="appartenance" required>
+                                    {% for ListeClub in ListeClubs %}
+                                            <option>{{ListeClub}}</option>
+                                    {% endfor %}
+                                 </select>
+                                 <label>Appartenance</label>
+                               </div>
+                            </div>
+                          </div>
+                        </div>
+                    {% endif %}
+                    </br>
+                    <button class="btn btn-success" type="submit">Valider</button>
+                    <a href="{% url 'EmpruntMateriel_urlpattern_name' %}" class="btn btn-danger">Annuler</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endif %}
+{% endblock %}
