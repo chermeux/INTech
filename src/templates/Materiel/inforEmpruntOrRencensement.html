@@ -20,7 +20,7 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">{% if AfficherInputRorE == 0 %}Emprunt{% else %}Rencenser le Matériel{% endif %}</h5>
-                    <p class="card-text">{% if AfficherInputRorE == 0 %}Indiquez tous les éléments pour emprunter un objet{% else %}Faisons l'inventaire du matériel INTech{% endif %}</p>
+                    <p class="card-text">{% if AfficherInputRorE == 0 %}Indiquez tous les éléments pour emprunter un objet. Valider correspond à accepter les règles d'INTech : Pas de retard pour rendre un objet, ne pas le casser/détériorer sinon INTech peut demander un remboursement complet du matériel et sans négociation possible{% else %}Faisons l'inventaire du matériel INTech{% endif %}</p>
                     {% if AfficherInputRorE == 0 %}
                         <div class="form-floating mb-3">
                           <div class="row g-2">
@@ -32,14 +32,14 @@
                             </div>
                             <div class="col-md">
                                <div class="form-floating">
-                                 <input type="text" class="form-control" value="" name="NomEmprunteur" required>
-                                 <label>Nom Emprunteur</label>
+                                 <input disabled type="text" class="form-control" value="{{DesignationObjet}}" required>
+                                 <label>Designation de l'objet</label>
                                </div>
                             </div>
                             <div class="col-md">
                                <div class="form-floating">
-                                 <input type="text" class="form-control" value="Carte Etudiante" name="Caution" required>
-                                 <label>Caution</label>
+                                 <input type="text" class="form-control" value="" name="NomEmprunteur" required>
+                                 <label>Nom Emprunteur</label>
                                </div>
                             </div>
                            </div>
@@ -47,14 +47,20 @@
                           <div class="form-floating mb-3">
                             <div class="row g-2">
                             <div class="col-md">
+                               <div class="form-floating">
+                                 <input type="text" class="form-control" value="Carte Etudiante" name="Caution" required>
+                                 <label>Caution</label>
+                               </div>
+                            </div>
+                            <div class="col-md">
                               <div class="form-floating">
-                                <input type="date" class="form-control" value="" name="DateDebutEmprunt" required>
+                                <input type="date" class="form-control" value="{{dateaffichage}}" name="DateDebutEmprunt" required>
                                 <label>Date Debut Emprunt</label>
                               </div>
                             </div>
                           <div class="col-md">
                             <div class="form-floating">
-                              <input type="date" class="form-control" value="" name="DateFinEmprunt" required>
+                              <input type="date" class="form-control" value="{{dateaffichage}}" name="DateFinEmprunt" required>
                               <label>Date Fin Emprunt</label>
                             </div>
                            </div>

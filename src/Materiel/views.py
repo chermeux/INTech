@@ -1,11 +1,13 @@
 import base64
-
 from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
 from .models import *
 import cv2
 from pyzbar.pyzbar import decode
 from PIL import Image, ImageEnhance
+import datetime
+import os
+
 
 def base64_file(data, name=None):
     _format, _img_str = data.split(';base64,')
@@ -90,39 +92,42 @@ def EmpruntRecensementMateriel(request):
                               (255, 0, 0), 2)
                 if barcode.data != "":
                     # Print the barcode data
-                    print(barcode.data)
                     CodeBarre = barcode.data
                     CodeBarre = str(CodeBarre)
                     CodeBarre = CodeBarre[1:-1]
                     CodeBarre = CodeBarre[1::]
-                    print(barcode.type)
             message = "Code Barre correctement traité"
-
+        os.remove('./import/more-contrast-image_%s.png' % NameImageId)
+        os.remove('./import/Convert_gray_%s.jpg' % NameImageId)
+        os.remove('./import/%s' % NameImage)
+        SupprimerTraitement = CodeTraitement.objects.filter(id=NameImageId)
+        SupprimerTraitement.delete()
         return redirect('/Materiel/InfoEmpruntRecensement/%s' % CodeBarre)
+
+
     context = {'photoTake': photoTake, 'message': message}
     return render(request, "Materiel/CodeBarreMateriel.html", context)
 
 def InfoEmpruntRecensement(request, pk):
+    DesignationObjet = "Inconnue Erreur"
+    dateaffichage = datetime.date.today().strftime('%Y-%m-%d')
     AfficherInputRorE = 2
     ObjetsBase = Objet.objects.all()
     ValeurCodeBarre = pk
     ListeClubs = ['INTech','BricolINT']
     for ObjetBase in ObjetsBase:
-        print(AfficherInputRorE)
-        print(ObjetBase.CodeBarre)
-        print(pk)
         if str(pk) == str(ObjetBase.CodeBarre):
             #Alors on veut emprunter l'objet
             AfficherInputRorE = 0 #cette variable prend la valeur 0 ou 1 en fonction de savoir si on emprunte ou on recencence un objet et donc l'affichage html est adapté
+            DesignationObjet = Objet.objects.get(CodeBarre=pk)
         else:
             AfficherInputRorE = 1
-        print(AfficherInputRorE)
     if request.method == "POST":
         if AfficherInputRorE == 0:
             NomEmprunteur = request.POST.get('NomEmprunteur')
             DateDebutEmprunt = request.POST.get('DateDebutEmprunt')
             DateFinEmprunt = request.POST.get('DateFinEmprunt')
-            Caution = request.POST.get('DateFinEmprunt')
+            Caution = request.POST.get('Caution')
             EmpruntSave = Emprunt.objects.create(idObjetEmprunt=ValeurCodeBarre, NomEmprunteur=NomEmprunteur, DateDebutEmprunt=DateDebutEmprunt, DateFinEmprunt=DateFinEmprunt, Caution=Caution)
             EmpruntSave.save()
         else:
@@ -132,6 +137,6 @@ def InfoEmpruntRecensement(request, pk):
             Rencensement = Objet.objects.create(CodeBarre=ValeurCodeBarre, description=description, appartenance=appartenance) #photoObjet=base64_file(photoObjet)
             Rencensement.save()
         return redirect('/Materiel/EmpruntorRecensement/')
-    context = {'AfficherInputRorE': AfficherInputRorE, 'ValeurCodeBarre':ValeurCodeBarre, 'ListeClubs':ListeClubs}
+    context = {'AfficherInputRorE': AfficherInputRorE, 'ValeurCodeBarre':ValeurCodeBarre, 'ListeClubs':ListeClubs, 'dateaffichage':dateaffichage, 'DesignationObjet':DesignationObjet}
     return render(request, "Materiel/inforEmpruntOrRencensement.html", context)
 
