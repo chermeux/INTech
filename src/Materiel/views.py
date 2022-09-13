@@ -7,6 +7,7 @@ from pyzbar.pyzbar import decode
 from PIL import Image, ImageEnhance
 import datetime
 import os
+from django.contrib.auth.decorators import login_required
 
 
 def base64_file(data, name=None):
@@ -16,6 +17,7 @@ def base64_file(data, name=None):
         name = _name.split(":")[-1]
     return ContentFile(base64.b64decode(_img_str), name='{}.{}'.format(name, ext))
 
+@login_required(login_url='presentation')
 # Create your views here.
 def EmpruntRecensementMateriel(request):
     photoTake = 0
@@ -108,6 +110,7 @@ def EmpruntRecensementMateriel(request):
     context = {'photoTake': photoTake, 'message': message}
     return render(request, "Materiel/CodeBarreMateriel.html", context)
 
+@login_required(login_url='presentation')
 def InfoEmpruntRecensement(request, pk):
     DesignationObjet = "Inconnue Erreur"
     dateaffichage = datetime.date.today().strftime('%Y-%m-%d')

@@ -10,3 +10,12 @@ class Partenairesbdd(models.Model):
 
     def __str__(self):
         return self.NomPartenaire
+
+class Evenementsbdd(models.Model):
+    id = models.AutoField(primary_key=True)
+    TitreEvenement = models.TextField(null=True)
+    Description = models.TextField(null=True)
+    Image = models.FileField()
+
+    def __str__(self):
+        return self.TitreEvenement
