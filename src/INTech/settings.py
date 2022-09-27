@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'INTech',
     'Materiel',
     'vitrine',
+    'Formation',
 ]
 
 MIDDLEWARE = [
