@@ -17,9 +17,11 @@ def indexFormation(request):
 #Cette partie permet d'indiquer les certificats que nous pouvons proposer
 @login_required(login_url='presentation')
 def Certification(request):
-    return render(request, "Formation/Certifications.html")
+    Certificats = Formation.objects.all()
+    context = {'Certificats':Certificats}
+    return render(request, "Formation/Certifications.html", context)
 
-#Cette partie permet d'indiquer les certificats que chaque membre a eu
+#Cette partie permet d'indiquer les certificats que chaque membre a eu et de valider ceux en cours de validation
 @login_required(login_url='presentation')
 def CertificatPersonne(request):
     return render(request, "Formation/PersonneAvecCertificat.html")
