@@ -9,4 +9,4 @@ class infoMembreINTech(models.Model):
     ValidationCompte = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.mail
+        return self.role
