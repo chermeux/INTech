@@ -11,14 +11,17 @@ def signin(request):
     if request.method == "POST":
         mail = request.POST.get('mail')
         mdp = request.POST.get('mdp')
-        membre = infoMembreINTech.objects.get(mail=mail)
-        user = authenticate(mail=mail, password=mdp)
+        membre = User.objects.get(email=mail)
+        for mb in membre: #TODO c'est du bricolage mais je sais pas pk je ne peux pas mettre un get
+            membre = mb
+        print(membre)
+        infomembre = infoMembreINTech.objects.get(idCompte=membre.id)
+        user = authenticate(email=mail, password=mdp)
         if user is not None:
-            if membre.ValidationCompte == True:
+            if infomembre.ValidationCompte == True:
                 login(request, user)
             else:
                 messages.info(request, "Votre compte n'a pas encore été validé par un membre administrateur")
-                return redirect('User/signin.html')
         else:
             messages.info(request, 'Mail ou mot de passe incorrect')
             return redirect('User/signin.html')
