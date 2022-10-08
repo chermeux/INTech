@@ -10,28 +10,17 @@ import os
 from django.contrib.auth.decorators import login_required
 
 #TODO Mettre une connexion unique administrateur ou bureau
-@login_required(login_url='presentation')
-def indexFormation(request):
-    return render(request, "Formation/indexFormation.html")
-
-#TODO Mettre une connexion unique administrateur ou bureau
 #Cette partie permet d'indiquer les certificats que nous pouvons proposer
-@login_required(login_url='presentation')
-def Certification(request):
-    Certificats = Formation.objects.all()
-    context = {'Certificats':Certificats}
-    return render(request, "Formation/Certifications.html", context)
-
-#TODO Mettre une connexion unique administrateur ou bureau
-#Cette partie permet d'indiquer les certificats que chaque membre a eu et de valider ceux en cours de validation
-@login_required(login_url='presentation')
-def CertificatPersonne(request):
-    return render(request, "Formation/PersonneAvecCertificat.html")
+@login_required
+def AdminFormation(request):
+    context = {}
+    return render(request, "Formation/AdminFormation.html", context)
 
 #cette partie permet à chaque utilisateur connecté de voir toutes les formations qu'il peut suivre et checker ses certificats
 @login_required(login_url='presentation')
 def FormationEachPerson(request):
-
+    FormationsDisponibles = Formation.objects.all()
+    CertificationsForPerson = Certification.objects.filter(idPersonneCertificat=1)#TODO 1 à remplacer par l'id de la personne quand elle est connectée
     context = {}
     return render(request, "Formation/FormationEachPerson.html", context)
 

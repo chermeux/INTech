@@ -1,0 +1,29 @@
+{% extends 'main.html'%}
+
+{% block bodymainPage %}
+<section>
+    </br></br></br></br>
+</section>
+<div class="container">
+    <h2>Les demandes de Certifications</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Adresse Mail</th>
+          <th scope="col">Certificat Formation</th>
+          <th scope="col">Valider Certification</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for certificat in Certificats %}
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+{% endblock %}

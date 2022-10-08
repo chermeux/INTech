@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.urls import path
-from .views import signin, signout, signup
+from .views import signin, signout, signup, Outils
 
 urlpatterns = [
-    path('signin/', signin,  name='login_urlpattern_name'),
-    path('signout/', signout, name='logout_urlpattern_name'),
-    path('signup/', signup, name='signup_urlpattern_name'),
+    path('signin/', signin,  name='signin'),
+    path('signout/', signout, name='signout'),
+    path('signup/', signup, name='signup'),
+    path('Outils/', Outils, name='Outils'),
+
 ]

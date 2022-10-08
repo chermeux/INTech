@@ -11,12 +11,13 @@ def signin(request):
     if request.method == "POST":
         mail = request.POST.get('mail')
         mdp = request.POST.get('mdp')
-        membre = User.objects.get(email=mail)
+        membre = User.objects.filter(email=mail)
+        print(membre)
         for mb in membre: #TODO c'est du bricolage mais je sais pas pk je ne peux pas mettre un get
             membre = mb
         print(membre)
         infomembre = infoMembreINTech.objects.get(idCompte=membre.id)
-        user = authenticate(email=mail, password=mdp)
+        user = authenticate(username=membre.username, password=mdp)
         if user is not None:
             if infomembre.ValidationCompte == True:
                 login(request, user)
@@ -24,14 +25,14 @@ def signin(request):
                 messages.info(request, "Votre compte n'a pas encore été validé par un membre administrateur")
         else:
             messages.info(request, 'Mail ou mot de passe incorrect')
-            return redirect('User/signin.html')
-        return redirect('vitrine/Presentation')
+            return redirect('../../User/signin/')
+        return redirect('../../User/Outils/')
     return render(request, "User/signin.html")
 
 @login_required(login_url='presentation')
 def signout(request):
     logout(request)
-    return redirect(reverse(login))
+    return redirect(reverse(signin))
 
 def signup(request):
     if request.method == "POST":
@@ -60,3 +61,7 @@ def signup(request):
 
         return redirect('vitrine/Presentation')
     return render(request, "User/signup.html")
+
+@login_required
+def Outils(request):
+    return render(request, "User/Outils.html")

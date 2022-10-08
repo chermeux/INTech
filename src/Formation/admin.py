@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import PersoneAvecCertificat, Formation, PersoneEnCoursCertification
+from .models import Certification, Formation
 
 admin.site.register(Formation)
-admin.site.register(PersoneAvecCertificat)
-admin.site.register(PersoneEnCoursCertification)
+admin.site.register(Certification)
