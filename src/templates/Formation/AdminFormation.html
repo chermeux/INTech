@@ -1,25 +1,39 @@
 {% extends 'main.html'%}
 
 {% block bodymainPage %}
-<section>
-    </br></br></br></br>
+<section class="mb-5">
+    </br></br></br>
+</section>
+<section class="my-5 container">
+    <div class="row">
+        {% url 'FormationEachPerson_urlpattern_name' as url %}
+        <a href="{{url}}" type="button" class="my-1 btn btn-primary">Retourner voir son compte formation</a>
+        {% url 'AddFormation_urlpattern_name' as url %}
+        <a href="{{url}}" type="button" class="my-1 btn btn-primary">Ajouter une formation</a>
+        {% url 'CertificationEncours_urlpattern_name' as url %}
+        <a href="{{url}}" type="button" class="my-1 btn btn-primary">Voir les demandes de Certifications</a>
+    </div>
 </section>
 <div class="container">
-    <h2>Les demandes de Certifications</h2>
+    <h2>Toutes les formations proposées</h2>
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="col">Adresse Mail</th>
-          <th scope="col">Certificat Formation</th>
-          <th scope="col">Valider Certification</th>
+          <th>ID</th>
+          <th>Nom Formation</th>
+          <th>Durée de la formation</th>
+          <th>Voir la formation</th>
+          <th>Modifier</th>
         </tr>
       </thead>
       <tbody>
-      {% for certificat in Certificats %}
+      {% for Formation in AllFormations %}
         <tr>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{{Formation.id}}</td>
+          <td>{{Formation.NomCertificat}}</td>
+          <td>{{Formation.Duree}}</td>
+          <td><a href="../FormationView/{{Formation.id}}" type="button" class="btn btn-outline-warning">Voir la Formation</a></td>
+          <td><a href="../UpdateFormation/{{Formation.id}}" type="button" class="btn btn-outline-danger">Modifier</a></td>
         </tr>
       {% endfor %}
       </tbody>

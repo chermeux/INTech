@@ -15,40 +15,17 @@
 </head>
 <body>
     <header class="site-header sticky-top py-1">
-        <nav class="navbar navbar-expand-md navbar-warning fixed-top bg-warning">
-              <div class="container d-flex flex-column flex-md-row justify-content-between">
-                {% load static %}
-                <img class="fit-picture" width="150" src="{% static 'images/INTech.png' %}" alt="Grapefruit slice atop a pile of other slices">
-                <a style="text-decoration:none;" class="py-2 d-none d-md-inline-block text-white" href="{% url 'Presentation_urlpattern_name' %}">Présentation</a>
-                <a style="text-decoration:none;" class="py-2 d-none d-md-inline-block text-white" href="{% url 'Evenements_urlpattern_name' %}">Evenements</a>
-                <a style="text-decoration:none;" class="py-2 d-none d-md-inline-block text-white" href="{% url 'Partenaires_urlpattern_name' %}">Partenaires</a>
-                {% if request.user.is_authenticated %}
-                    <a style="text-decoration:none;" class="py-2 d-none d-md-inline-block text-white" href="{% url 'Outils' %}">Outils</a>
-                {% endif %}
-                {% if request.user.is_authenticated %}
-                  {% url 'signout' as url %}
-                    <a style="text-decoration:none;" class="py-2 d-none d-md-inline-block text-white" href="{{url}}">Déconnexion</a>
-                {% else %}
-                  {% url 'signin' as url %}
-                    <a style="text-decoration:none;" class="py-2 d-none d-md-inline-block text-white" href="{{url}}">Connexion</a>
-                {% endif %}
-              </div>
-        </nav>
+       {% include 'base/navbar.html' %}
     </header>
     <main>
             {% block bodymainPage %}
             {% endblock %}
     </main>
 
+    <div style="position: static !important;"></div>
 
-</main><div style="position: static !important;"></div>
-
-<footer class="text-muted py-5">
-  <div class="container">
-      <img class="h-25 w-25" src="/../import/tsp&imtbs.png">
-      <a href="#"><p>Mentions légales</p></a>
-  </div>
-</footer>
-
+    <footer class="text-muted py-5">
+        {% include 'base/footer.html' %}
+    </footer>
 </body>
 </html>

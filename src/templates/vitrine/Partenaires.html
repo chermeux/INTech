@@ -3,42 +3,29 @@
 {% block bodymainPage %}
 <main>
 
-<section class="text-center">
-
-  <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img class="bd-placeholder-img" width="100%" height="100%" src="../import/INTechPresentation.jpg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect>
-        <div class="container">
-          <div class="carousel-caption text-start">
-            <h1>Nous contacter</h1>
-            <p>La robotique au bout de vos doigts</p>
-            <p><a class="btn btn-lg btn-primary" href="mailto:intech@it-sudparis.eu">Envoyer un message</a></p>
-          </div>
-        </div>
-      </div>
-   </div>
-
+{% include 'base/banniere.html' %}
+<section class="m-5 text-center">
+    <h2 class="CouleurJauneINTech">Nos Partenaires</h2>
 </section>
-<div class="album py-5 bg-light">
-  <div class="container">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+<section class="d-flex justify-content-around flex-wrap">
         {% for PartenaireView in PartenairesViews %}
-          <div class="col">
+        <div class="col-md-3 m-3">
             <div class="card shadow-sm">
-              <img src="/import/{{PartenaireView.Image}}" class="bd-placeholder-img card-img-top" width="100%" height="225" role="img">
-              <div class="card-body">
-                <p class="card-text">{{PartenaireView.NomPartenaire}}</br></p>
-                <p class="card-text">{{PartenaireView.Description}}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <a href="{{PartenaireView.SiteWeb}}" class="btn btn-sm btn-outline-secondary">Voir le site du partenaire</a>
-                  </div>
+                <img src="{{PartenaireView.Image.url}}" class="bd-placeholder-img card-img-top" width="100%" height="225" role="img">
+                <div class="card-body">
+                    <p class="text-center card-text couleurOrangeRose">{{PartenaireView.NomPartenaire}}</br></p>
+                    <p class="card-text">{{PartenaireView.Description}}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a href="{{PartenaireView.SiteWeb}}" target="_blank" class="btn btn-sm btn-outline-secondary">Voir le site du partenaire</a>
+                        </div>
+                    </div>
                 </div>
-              </div>
-          </div>
-        {% endfor %}
-      </div>
-   </div>
-</div>
+            </div>
+        </div>
+    {% endfor %}
+</section>
+
+
 
 {% endblock %}

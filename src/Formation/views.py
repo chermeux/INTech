@@ -8,33 +8,115 @@ from PIL import Image, ImageEnhance
 import datetime
 import os
 from django.contrib.auth.decorators import login_required
+from User.models import infoMembreINTech
+from User.views import getBase
 
-#TODO Mettre une connexion unique administrateur ou bureau
-#Cette partie permet d'indiquer les certificats que nous pouvons proposer
+#Cette partie permet d'accéder à l'ajout de formations, les modifications et encore de valider l'obtention d'une formation pour ceux qui font la demande
 @login_required
 def AdminFormation(request):
-    context = {}
-    return render(request, "Formation/AdminFormation.html", context)
+    infomembre = infoMembreINTech.objects.get(idCompte=request.user.id)
+    context ={}
+    if infomembre.role == "Bureau":
+        AllFormations = Formation.objects.all()
+        lien = 'https://docs.google.com/document/d/e/2PACX-1vT9n15jg5UqUTXggMtCgi0aHMLOwyOlRlWMbGj1ZIH2b8iV7jeC3dZrqQlYxRVAsVCshiNkMv-uPuJZ/pub'
+        context ={'AllFormations':AllFormations,'lien':lien}
+    else:
+        return redirect('/')
+    return render(request, "Formation/AdminFormation.html",getBase(request)|context)
+
+#Cela permet à un membre du bureau de créer une formation
+@login_required
+def Formationadd(request):
+    infomembre = infoMembreINTech.objects.get(idCompte=request.user.id)
+    if infomembre.role == "Bureau":
+        if request.method == "POST":
+            NomCertificat = request.POST.get('NomFormation')
+            Description = request.POST.get('Description')
+            Duree = request.POST.get('Duree')
+            LienQuestionnaire = request.POST.get('Questionnaire')
+            PDFFormationEcrite = request.FILES.get('FormationDocument')
+            FormationAdd = Formation.objects.create(NomCertificat=NomCertificat, Description=Description, Duree=Duree, LienQuestionnaire=LienQuestionnaire, PDFFormationEcrite=PDFFormationEcrite)
+            FormationAdd.save()
+            return redirect('../../Formation/Formationadd/')
+    else:
+        return redirect('/')
+    return render(request, "Formation/FormationAdd.html")
+
+#Cela permet à un membre du bureau de mettre à jour une formation disponible
+@login_required(login_url='presentation')
+def UpdateFormation(request, pk):
+    ViewFormation = Formation.objects.get(id=pk)
+    infomembre = infoMembreINTech.objects.get(idCompte=request.user.id)
+    if infomembre.role == "Bureau":
+        if request.method == "POST":
+            NomCertificat = request.POST.get('NomFormation')
+            Description = request.POST.get('Description')
+            Duree = request.POST.get('Duree')
+            LienQuestionnaire = request.POST.get('Questionnaire')
+            PDFFormationEcrite = request.FILES.get('FormationDocument')
+            UpdateFormation = Formation.objects.filter(id=pk).update(NomCertificat=NomCertificat, Description=Description, Duree=Duree, LienQuestionnaire=LienQuestionnaire, PDFFormationEcrite=PDFFormationEcrite)
+            CertificationDeletePasAJour = Certification.objects.filter(idFormation=pk,EtatCertification='DemandeValidation')
+            CertificationDeletePasAJour.delete()
+            return redirect('../../Formation/FormationEachPerson/')
+    else:
+        return redirect('/')
+    context = {'ViewFormation': ViewFormation}
+    return render(request, "Formation/FormationUpdate.html", context)
+
 
 #cette partie permet à chaque utilisateur connecté de voir toutes les formations qu'il peut suivre et checker ses certificats
-@login_required(login_url='presentation')
+@login_required
 def FormationEachPerson(request):
-    FormationsDisponibles = Formation.objects.all()
-    CertificationsForPerson = Certification.objects.filter(idPersonneCertificat=1)#TODO 1 à remplacer par l'id de la personne quand elle est connectée
-    context = {}
+    infomembre = infoMembreINTech.objects.get(idCompte=request.user.id)
+    CertificationsForPerson = Certification.objects.filter(idPersonneCertificat=request.user.id)
+    listID =[]
+    listIDFValide = []
+    listIDFEnCoursValide = []
+    for IDCertificationsForPerson in CertificationsForPerson:
+        if IDCertificationsForPerson.EtatCertification == "Validee":
+            listIDFValide.append(IDCertificationsForPerson.idFormation)
+        else :
+            listIDFEnCoursValide.append(IDCertificationsForPerson.idFormation)
+        listID.append(IDCertificationsForPerson.idFormation)
+    FormationsValidee = Formation.objects.filter(id__in=listIDFValide)
+    FormationsEnCoursValide = Formation.objects.filter(id__in=listIDFEnCoursValide)
+    FormationsDisponibles = Formation.objects.exclude(id__in=listID)
+    #TODO Modifier c'est du bricolage, il faut modifier la bdd pour que ce soit des foreign key puis il sera possible de faire une jointure django comme ça existe une option bien faite, donc ça permettra aussi de réduire le template associé là c'est du bricolage rapide mais moche et à modifier de manière urgente !
+    context = {'FormationsDisponibles':FormationsDisponibles, 'FormationsValidee':FormationsValidee, 'FormationsEnCoursValide':FormationsEnCoursValide, 'infomembre':infomembre}
     return render(request, "Formation/FormationEachPerson.html", context)
-
 
 #Cela permet d'afficher le contenu de chaque formation
 @login_required(login_url='presentation')
 def FormationView(request, pk):
-    context = {}
+    ViewFormation = Formation.objects.get(id=pk)
+    context = {'ViewFormation':ViewFormation}
     return render(request, "Formation/FormationView.html", context)
 
-#Cela permet d'afficher le questionnaire de chaque formation
+#Cela permet d'afficher le contenu de chaque formation
 @login_required(login_url='presentation')
 def QuestionnaireView(request, pk):
+    ViewFormation = Formation.objects.get(id=pk)
     if request.method == "POST":
-        return redirect('/Formation/FormationEachPerson/')
-    context = {}
+        CertificationDemande = Certification.objects.create(idPersonneCertificat=request.user.id, idFormation=pk, EtatCertification='DemandeValidation')
+        CertificationDemande.save()
+        return redirect('../../Formation/FormationEachPerson/')
+    context = {'ViewFormation':ViewFormation}
     return render(request, "Formation/QuestionnaireView.html", context)
+
+#Cela permet d'afficher ceux qui ont fait une demande de certification pour ensuite pour valider ou non celles-ci
+@login_required(login_url='presentation')
+def CertificationEncoursView(request):
+    infomembre = infoMembreINTech.objects.get(idCompte=request.user.id)
+    ViewFormations = Formation.objects.all()
+    UserAll = User.objects.all()
+    CertificationDemande = Certification.objects.filter(EtatCertification='DemandeValidation')
+    if infomembre.role == "Bureau":
+        if request.method == "POST":
+            id = request.POST.get('id')
+            CertificationValidation = Certification.objects.filter(id=id).update(EtatCertification='Validee')
+            return redirect('../../Formation/CertificationEncours/')
+    else:
+        return redirect('/')
+# TODO Modifier c'est du bricolage, il faut modifier la bdd pour que ce soit des foreign key puis il sera possible de faire une jointure django comme ça existe une option bien faite, donc ça permettra aussi de réduire le template associé là c'est du bricolage rapide mais moche et à modifier de manière urgente !
+    context = {'CertificationDemande':CertificationDemande,'ViewFormations':ViewFormations,'UserAll':UserAll}
+    return render(request, "Formation/ValidationCertification.html", context)

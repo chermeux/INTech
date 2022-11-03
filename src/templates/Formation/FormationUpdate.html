@@ -1,0 +1,65 @@
+{% extends 'main.html'%}
+
+{% block bodymainPage %}
+<section>
+  </br></br>
+</section>
+<section class="my-5 container">
+    {% url 'AdminFormation_urlpattern_name' as url %}
+    <a href="{{url}}" type="button" class="btn btn-primary">Retourner sur le DashBoard Formation</a>
+</section>
+<section>
+  <form method="post" action="{% url 'UpdateFormation_urlpattern_name' ViewFormation.id %}" enctype="multipart/form-data">
+      {% csrf_token %}
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          Modifier une formation
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Modifier une formation</h5>
+          <div class="form-floating mb-3">
+            <div class="row g-2">
+              <div class="col-md">
+                <div class="form-floating">
+                  <input type="text" step="any" class="form-control" value="{{ViewFormation.NomCertificat}}" name="NomFormation" required>
+                  <label for="floatingInputGrid">Nom Formation</label>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="form-floating">
+                  <input type="text" step="any" class="form-control" value="{{ViewFormation.Description}}" name="Description" required>
+                  <label for="floatingInputGrid">Description</label>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="form-floating">
+                  <input type="text" step="any" class="form-control" value="{{ViewFormation.LienQuestionnaire}}" name="Questionnaire" required>
+                  <label for="floatingInputGrid">Lien Questionnaire</label>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="form-floating">
+                  <input type="text" step="any" class="form-control" value="{{ViewFormation.Duree}}" name="Duree" required>
+                  <label for="floatingInputGrid">Durée</label>
+                </div>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-md">
+                <div class="form-floating">
+                  <div class="mb-3">
+                    <label for="formFileDisabled" class="form-label">Formation en PDF</label>
+                    <input required name="FormationDocument" type="file" class="form-control" accept=".pdf" id="formFileDisabled">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success">Valider</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+{% endblock %}

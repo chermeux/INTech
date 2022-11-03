@@ -4,17 +4,20 @@
 <section>
     </br></br></br>
 </section>
+{% if infomembre.role == "Bureau" %}
 <section class="container">
     </br>
-    <a src="#" type="button" class="btn btn-primary">Voir la partie admin des formations</a>
+    {% url 'AdminFormation_urlpattern_name' as url %}
+    <a href="{{url}}" type="button" class="btn btn-primary">Voir la partie admin des formations</a>
     </br></br>
 </section>
+{% endif %}
 <section>
     <div class="container">
         <table class="table table-hover">
           <thead>
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">ID</th>
               <th scope="col">Nom Formation</th>
               <th scope="col">Durée de la Formation</th>
               <th scope="col">Formation validée</th>
@@ -22,13 +25,31 @@
             </tr>
           </thead>
           <tbody>
-            {% for ... in ... %}
+            {% for FormationValidee in FormationsValidee %}
               <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td><a type="button" class="btn btn-outline-warning">Warning</a></td>
+                <td>{{FormationValidee.id}}</td>
+                <td>{{FormationValidee.NomCertificat}}</td>
+                <td>{{FormationValidee.Duree}}</td>
+                <td>Validée</td>
+                <td><a href="#" type="button" class="btn btn-outline-warning">Voir la Formation</a></td>
+              </tr>
+            {% endfor %}
+            {% for FormationEnCoursValide in FormationsEnCoursValide %}
+              <tr>
+                <td>{{FormationEnCoursValide.id}}</td>
+                <td>{{FormationEnCoursValide.NomCertificat}}</td>
+                <td>{{FormationEnCoursValide.Duree}}</td>
+                <td>En Cours de Validation</td>
+                <td><a href="#" type="button" class="btn btn-outline-warning">Voir la Formation</a></td>
+              </tr>
+            {% endfor %}
+            {% for FormationDisponible in FormationsDisponibles %}
+              <tr>
+                <td>{{FormationDisponible.id}}</td>
+                <td>{{FormationDisponible.NomCertificat}}</td>
+                <td>{{FormationDisponible.Duree}}</td>
+                <td></td>
+                <td><a href="../FormationView/{{FormationDisponible.id}}" type="button" class="btn btn-outline-warning">Voir la Formation</a></td>
               </tr>
             {% endfor %}
           </tbody>

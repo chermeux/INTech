@@ -6,16 +6,16 @@ from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
 
+def getBase(request):
+    return {'infoMembreINTech': infoMembreINTech.objects.all()}
 
 def signin(request):
     if request.method == "POST":
         mail = request.POST.get('mail')
         mdp = request.POST.get('mdp')
         membre = User.objects.filter(email=mail)
-        print(membre)
         for mb in membre: #TODO c'est du bricolage mais je sais pas pk je ne peux pas mettre un get
             membre = mb
-        print(membre)
         infomembre = infoMembreINTech.objects.get(idCompte=membre.id)
         user = authenticate(username=membre.username, password=mdp)
         if user is not None:
@@ -41,7 +41,7 @@ def signup(request):
         Prenom = request.POST.get('Prenom')
         Ecole = request.POST.get('Ecole')
         mail = request.POST.get('mail')
-        mdp1 = request.POST.get('mdp1') #TODO hasher mdp
+        mdp1 = request.POST.get('mdp1')
         mdp2 = request.POST.get('mdp2')
         role = "Membre"
         if mdp1 == mdp2:

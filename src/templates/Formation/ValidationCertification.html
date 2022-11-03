@@ -1,0 +1,46 @@
+{% extends 'main.html'%}
+
+{% block bodymainPage %}
+<section>
+    </br></br></br></br>
+</section>
+<section class="container">
+    </br>
+    {% url 'AdminFormation_urlpattern_name' as url %}
+    <a href="{{url}}" type="button" class="btn btn-primary">Revenir à l'admin des formations</a>
+    </br></br>
+</section>
+<div class="container">
+    <h2>Les demandes de Certifications</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Adresse Mail</th>
+          <th>Nom de la Formation</th>
+          <th>Valider Certification</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for certificat in CertificationDemande %}
+        <form method="post" action=".">
+            {% csrf_token %}
+            <input type="hidden" class="form-control" value="{{certificat.id}}" name="id">
+            <tr>
+              {% for Membre in UserAll %}
+                {% if Membre.id == certificat.idPersonneCertificat %}
+                    <td>{{Membre.email}}</td>
+                {% endif %}
+              {% endfor %}
+              {% for ViewFormation in ViewFormations %}
+                {% if ViewFormation.id == certificat.idFormation %}
+                    <td>{{ViewFormation.NomCertificat}}</td>
+                {% endif %}
+              {% endfor %}
+              <td><button class="btn btn-success" type="submit">Valider la certification</button></td>
+            </tr>
+        </form>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endblock %}
