@@ -12,7 +12,7 @@
     </br></br>
 </section>
 {% endif %}
-<section>
+<section class="my-5">
     <div class="container">
         <table class="table table-hover">
           <thead>
@@ -31,7 +31,7 @@
                 <td>{{FormationValidee.NomCertificat}}</td>
                 <td>{{FormationValidee.Duree}}</td>
                 <td>Validée</td>
-                <td><a href="#" type="button" class="btn btn-outline-warning">Voir la Formation</a></td>
+                <td><a href="../FormationView/{{FormationValidee.id}}" type="button" class="btn btn-outline-warning">Voir la Formation</a></td>
               </tr>
             {% endfor %}
             {% for FormationEnCoursValide in FormationsEnCoursValide %}
@@ -40,7 +40,7 @@
                 <td>{{FormationEnCoursValide.NomCertificat}}</td>
                 <td>{{FormationEnCoursValide.Duree}}</td>
                 <td>En Cours de Validation</td>
-                <td><a href="#" type="button" class="btn btn-outline-warning">Voir la Formation</a></td>
+                <td><a href="../FormationView/{{FormationEnCoursValide.id}}" type="button" class="btn btn-outline-warning">Voir la Formation</a></td>
               </tr>
             {% endfor %}
             {% for FormationDisponible in FormationsDisponibles %}

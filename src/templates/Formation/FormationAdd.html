@@ -1,5 +1,20 @@
 {% extends 'main.html'%}
 
+{% load static %}
+{% block head %}
+    <!--<link rel="stylesheet" type="text/sass" href="{% static 'home/css/cours.sass' %}">-->
+
+<!--Tinymce Text-Editor (Must be in Head Tag) -->
+  <script src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+<script>
+    tinymce.init({
+      selector: 'textarea',
+      plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+    });
+  </script>
+{% endblock %}
+
 {% block bodymainPage %}
 <section>
   </br></br>
@@ -8,7 +23,7 @@
     {% url 'AdminFormation_urlpattern_name' as url %}
     <a href="{{url}}" type="button" class="btn btn-primary">Retourner sur le DashBoard Formation</a>
 </section>
-<section>
+<section class="my-5">
   <form method="post" action="." enctype="multipart/form-data">
       {% csrf_token %}
     <div class="container">
@@ -34,12 +49,6 @@
               </div>
               <div class="col-md">
                 <div class="form-floating">
-                  <input type="text" step="any" class="form-control" name="Questionnaire" required>
-                  <label for="floatingInputGrid">Lien Questionnaire</label>
-                </div>
-              </div>
-              <div class="col-md">
-                <div class="form-floating">
                   <input type="text" step="any" class="form-control" name="Duree" required>
                   <label for="floatingInputGrid">Durée</label>
                 </div>
@@ -50,7 +59,17 @@
                 <div class="form-floating">
                   <div class="mb-3">
                     <label for="formFileDisabled" class="form-label">Formation</label>
-                    <input required name="FormationDocument" type="text" class="form-control" >
+                    <textarea name="FormationDocument" ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-md">
+                <div class="form-floating">
+                  <div class="mb-3">
+                    <label for="formFileDisabled" class="form-label">Questionnaire</label>
+                    <textarea name="Questionnaire"></textarea>
                   </div>
                 </div>
               </div>
@@ -62,4 +81,5 @@
     </div>
   </form>
 </section>
+
 {% endblock %}

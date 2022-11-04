@@ -3,7 +3,7 @@
 {% block bodymainPage %}
 
 <!-- Section: Design Block -->
-<section class="text-center">
+<section class="my-5 text-center">
   <!-- Background image -->
   <div class="p-5 bg-image" style="
         background-image: url('https://cdn.pixabay.com/photo/2020/05/20/12/27/banner-5196281_960_720.jpg');
@@ -38,9 +38,10 @@
 
             <!-- Submit button -->
             <button type="submit" class="btn btn-primary btn-block mb-4">
-              Sign up
+              Connexion
             </button>
-
+            {% url 'signup' as url %}
+            <a href="{{url}}" class="btn btn-outline-success btn-block mb-4">S'inscrire</a>
           </form>
         </div>
       </div>

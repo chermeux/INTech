@@ -8,6 +8,7 @@ from PIL import Image, ImageEnhance
 import datetime
 import os
 from django.contrib.auth.decorators import login_required
+from vitrine.views import getBase
 
 
 def base64_file(data, name=None):
@@ -108,7 +109,7 @@ def EmpruntRecensementMateriel(request):
 
 
     context = {'photoTake': photoTake, 'message': message}
-    return render(request, "Materiel/CodeBarreMateriel.html", context)
+    return render(request, "Materiel/CodeBarreMateriel.html", getBase(request)|context)
 
 @login_required(login_url='presentation')
 def InfoEmpruntRecensement(request, pk):
@@ -141,5 +142,5 @@ def InfoEmpruntRecensement(request, pk):
             Rencensement.save()
         return redirect('/Materiel/EmpruntorRecensement/')
     context = {'AfficherInputRorE': AfficherInputRorE, 'ValeurCodeBarre':ValeurCodeBarre, 'ListeClubs':ListeClubs, 'dateaffichage':dateaffichage, 'DesignationObjet':DesignationObjet}
-    return render(request, "Materiel/inforEmpruntOrRencensement.html", context)
+    return render(request, "Materiel/inforEmpruntOrRencensement.html", getBase(request)|context)
 

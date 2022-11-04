@@ -5,9 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
-
-def getBase(request):
-    return {'infoMembreINTech': infoMembreINTech.objects.all()}
+from vitrine.views import getBase
 
 def signin(request):
     if request.method == "POST":
@@ -27,7 +25,7 @@ def signin(request):
             messages.info(request, 'Mail ou mot de passe incorrect')
             return redirect('../../User/signin/')
         return redirect('../../User/Outils/')
-    return render(request, "User/signin.html")
+    return render(request, "User/signin.html",getBase(request))
 
 @login_required(login_url='presentation')
 def signout(request):
@@ -60,8 +58,8 @@ def signup(request):
             messages.info(request, "les mots de passe sont différents")
 
         return redirect('vitrine/Presentation')
-    return render(request, "User/signup.html")
+    return render(request, "User/signup.html",getBase(request))
 
 @login_required
 def Outils(request):
-    return render(request, "User/Outils.html")
+    return render(request, "User/Outils.html",getBase(request))

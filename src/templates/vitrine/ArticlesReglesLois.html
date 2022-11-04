@@ -1,0 +1,21 @@
+{% extends 'main.html'%}
+
+{% block bodymainPage %}
+
+
+{% include 'base/banniere.html' %}
+<section class="my-5 container">
+    <iframe srcdoc='
+            <html>
+                <head>
+
+                </head>
+                <body>
+                    {{ArticleAMettre}}
+                </body>
+            </html>
+        ' width="100%" height="auto" onload='resizeIframe(this)'>
+    </iframe>
+</section>
+
+{% endblock %}

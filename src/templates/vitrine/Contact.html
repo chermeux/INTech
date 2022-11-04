@@ -1,0 +1,15 @@
+{% extends 'main.html'%}
+
+{% block bodymainPage %}
+
+
+{% include 'base/banniere.html' %}
+<section class="my-5 container align-items-center row py-5 contact">
+    <article class="col-sm-6 textContact">
+        <p class="p-2"><span class="CouleurJauneINTech">Mail : </span>{{ParametresGlobaux.AdresseMail}}</p>
+        <p class="p-2"><span class="CouleurJauneINTech">Adresse : </span>{{ParametresGlobaux.Adresse}} {{ParametresGlobaux.Ville}}</p>
+        <p class="p-2"><span class="CouleurJauneINTech">Numéro de Téléphone : </span>{{ParametresGlobaux.NumeroTelephone}}</p>
+    </article>
+</section>
+
+{% endblock %}
