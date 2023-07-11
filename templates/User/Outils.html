@@ -1,0 +1,58 @@
+{% extends 'main.html'%}
+
+{% block bodymainPage %}
+
+<section>
+    </br></br></br>
+</section>
+<section class="my-5">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          <a href="../../Materiel/EmpruntorRecensement/">
+            <div class="col">
+              <div class="card h-100">
+                <img src="https://cdn.pixabay.com/photo/2014/08/05/10/30/iphone-410324_960_720.jpg" class="card-img-top" alt="PhotoDescriptionServiceEmprunter">
+                <div class="card-body">
+                  <h5 class="card-title">Emprunter ou Rencenser du matériel</h5>
+                  <p class="card-text">Cet outil permet d'indiquer le matériel emprunté grâce à une simple photographie du code barre</p>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a href="../../../Formation/FormationEachPerson/">
+            <div class="col">
+              <div class="card h-100">
+                <img src="https://cdn.pixabay.com/photo/2017/08/01/00/38/man-2562325_960_720.jpg" class="card-img-top" alt="PhotoDescriptionServiceFormation">
+                <div class="card-body">
+                  <h5 class="card-title">Formations</h5>
+                  <p class="card-text">Venez suivre toutes les formations d'INTech ;) </br></br></br></br></p>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a href="{{ParametresGlobaux.lienDrive}}">
+            <div class="col">
+              <div class="card h-100">
+                <img src="https://cdn.pixabay.com/photo/2016/11/22/19/24/archive-1850170_960_720.jpg" class="card-img-top" alt="PhotoDescriptionServiceDrive">
+                <div class="card-body">
+                  <h5 class="card-title">Lien Drive</h5>
+                  <p class="card-text">Cliquez ici pour accéder au Drive d'INTech</br></br></br></br></p>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a href="{{ParametresGlobaux.lienGit}}">
+            <div class="col">
+              <div class="card h-100">
+                <img src="https://cdn.pixabay.com/photo/2016/11/19/14/00/code-1839406_960_720.jpg" class="card-img-top" alt="PhotoDescriptionServiceGit">
+                <div class="card-body">
+                  <h5 class="card-title">Git</h5>
+                  <p class="card-text">Cliquez ici pour accéder au Git d'INTech</br></br></br></br></p>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'main.html'%}
+
+{% block bodymainPage %}
+
+<section class="text-center">
+    </br>
+    </br>
+    </br>
+    </br>
+</section>
+<section class="my-5">
+    <form method="post" action="">
+        {% csrf_token %}
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <h5 class="card-header h5 text-center">
+                            Prendre photographie Code Barre
+                        </h5>
+                        <div class="card-body">
+                            <div class="form-floating mb-3"></div>
+                                <div class="mb-3">
+                                    <label for="formFileDisabled" class="form-label">Code Barre objet emprunté</label>
+                                    <input required name="canvas" type="file" class="form-control" accept=".jpg, .jpeg, .png, .pdf" id="formFileDisabled">
+                                </div>
+                                <div class="card-body text-center">
+                                    <button class="btn btn-outline-info" type="submit">Valider la photo</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+{% endblock %}
